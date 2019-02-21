@@ -88,7 +88,7 @@ classdef tableAgent < handle
     % 
     % methods of . and () acess
         obj = row(obj,idstr)
-        obj = gen(obj,strcmd)
+        obj = gen(obj,strcmd,fn1,fn2)
         a = subsref(obj,S)
         B = subsasgn(obj, S, V)
         tf = areParensNext(S)

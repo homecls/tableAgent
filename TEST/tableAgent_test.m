@@ -11,7 +11,8 @@
 % 
 % 
 %% EXMAPLE
-% 
+% example 
+%  
 % 
 %% SEE ALSO
 %
@@ -33,10 +34,19 @@ Tagent = tableAgent(T);
 % Tagent.row('grade>1').gen('G = grade*9');
 
 %% Part 3, Output of result
-Tagent.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
-    .row('grade==99').gen('G = log(grade)*10');
+% Tagent.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
+%     .row('grade<=99').gen('G = log(grade)*10')...
+%     .row([1,3]).gen('G=3')...
+%     .row().gen('G=pi');
+fnew = @(x)(x+3);
+Tagent.row().gen('G=fnew(pi)',fnew,'fnew');
+Tagent.row().gen('G2=fnew(pi)',fnew,'fnew');
+% Tagent.row().gen('G2=[]');
+% Tagent.row().gen('G=pi',@log,@sin);
 %% Part 4, Demo of result
 disp(T)
 disp(Tagent.table)
+
+
 return;
  
