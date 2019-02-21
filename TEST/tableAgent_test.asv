@@ -1,0 +1,41 @@
+% OBJECTIVE: test of table Agent
+% function A table agent = main(A table,)
+%
+%% INPUT
+% A table = 
+%  = 
+%% OUTPUT
+% A table agent = 
+%
+%% REQUIRMENT
+% 
+% 
+%% EXMAPLE
+% 
+% 
+%% SEE ALSO
+%
+% 
+%% AUTHOR: linrenwen@gmail.com
+%% VERSION: v1.0 2019/02/21
+
+clc; clear; close all; % fclose all;
+P.prj = addpathprj('tableAgent');
+
+%% Part 1, Data
+
+T = table;
+T.name = ["Joan","Merry"]';
+T.grade = [99,67]';
+
+%% Part 2, Calculation
+Tagent = tableAgent(T);
+Tagen
+
+%% Part 3, Output of result
+
+
+%% Part 4, Demo of result
+
+return;
+ 
