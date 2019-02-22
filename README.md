@@ -25,7 +25,6 @@ Tagent = tableAgent(T);
 ``` matlab
 %% Test of passing variable x
 para.x = [1,1]';
-para.y = [10,10]';
 Tagent.row([1,2]).gen('Gx=grade + para.x',para);
 disp(Tagent.table)
 return
