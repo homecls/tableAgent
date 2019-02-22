@@ -1,11 +1,12 @@
 % OBJECTIVE: Calculate #####
-function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname)
+function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname,varargin)
 % obj = fn(obj,idstr)
 %
 %% INPUT
 % obj = 
 % idstr = 
 % TODO: DO NOT USE `FNHANDLE_TEMP_` AS COLNAME IN TABLE
+% F
 %% OUTPUT
 % obj = 
 %
@@ -23,6 +24,12 @@ function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname)
 % fnew = @(x)(x+3);
 % Tagent.row().gen('G=fnew(pi)',fnew,'fnew');
 % 
+% example 3:
+% para.x = [1,1]';
+% para.y = [10,10]';
+% Tagent.row([1,2]).gen('Gx=grade + para.x - para.y',para);
+% disp(Tagent.table)
+% 
 %% SEE ALSO
 %
 % 
@@ -36,15 +43,27 @@ function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname)
 % eval(strcat(fname,'=@fn;'));
 % fname = eval('@fn');
 
-
-
 switch class(idstr)
 case {'string','char'}
     % for example 'cola>3&colb>4' to 'T.cola > 3 & T.colb > 4'
     idstrfull = strgenTransit(obj, idstr);
-    if nargin == 4
+    ISFUN = isa(FNHANDLE_TEMP_,'function_handle');
+    if nargin==4 && ISFUN
         idstrfull = strrep(idstrfull,fname,'FNHANDLE_TEMP_');
+    elseif nargin>=3 && isstruct(FNHANDLE_TEMP_);
+        para = FNHANDLE_TEMP_;   
+    else
+        error('somthing is wrong for inputs');
     end
+    switch nargin
+    case {1,2}
+    case {4}
+        
+    otherwise
+
+        
+    end
+
     eval(idstrfull);
 case {'double'}
     error('data type of arg is wrong')

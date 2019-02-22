@@ -93,7 +93,7 @@ classdef tableAgent < handle
         obj = row(obj,idstr)
         obj = gen(obj,strcmd,fn1,fn2)
         a = subsref(obj,S)
-        obj = subsasgn(obj, S, V)
+        subsasgn(obj, S, V)
         tf = areParensNext(S)
         sz = numArgumentsFromSubscript(t,s,context)
     end % method

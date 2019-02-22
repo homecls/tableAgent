@@ -1,5 +1,5 @@
 % OBJECTIVE: Calculate #####
-function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname)
+function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname,varargin)
 % obj = fn(obj,idstr)
 %
 %% INPUT
@@ -36,20 +36,50 @@ function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname)
 % eval(strcat(fname,'=@fn;'));
 % fname = eval('@fn');
 
-
-
 switch class(idstr)
 case {'string','char'}
     % for example 'cola>3&colb>4' to 'T.cola > 3 & T.colb > 4'
     idstrfull = strgenTransit(obj, idstr);
-    if nargin == 4
-        idstrfull = strrep(idstrfull,fname,'fn');
+    ISFUN = isa(FNHANDLE_TEMP_,'function_handle');
+    if nargin==4 && ISFUN
+        idstrfull = strrep(idstrfull,fname,'FNHANDLE_TEMP_');
+    elseif nargin>=3 && ~ISFUN
+        inputname(1)
+        inputname(2)
+        inputname(3)
+        dbup
+        whos
+        dbup
+        whos
+        
+        
+        eval(strcat(inputname(3),'=', FNHANDLE_TEMP_ ,';'));
+        if nargin ==4
+            eval(strcat(inputname(fname),'=', fname,';'));
+        elseif nargin > 4
+            eval(strcat(inputname(fname),'=', fname,';'));
+            for iarg = 5:nargin
+                eval(strcat(inputname(varargin{iarg}),'=', varargin{iarg},';'));
+            end
+
+        end
+    else
+        error('somthing is wrong for inputs');
     end
+    switch nargin
+    case {1,2}
+    case {4}
+        
+    otherwise
+
+        
+    end
+
     eval(idstrfull);
 case {'double'}
-    ind2sub
+    error('data type of arg is wrong')
 case {'logical'}
-    
+    error('data type of arg is wrong')
 otherwise
     error('the data type of idstr in wrong');
 end

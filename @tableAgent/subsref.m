@@ -1,4 +1,4 @@
-function obj = subsref(obj,S)
+function varargout = subsref(obj,S)
 %SUBSREF Method for panelTable object
 
 %   Author: Lin Renwen
@@ -28,10 +28,17 @@ switch S(1).type
             otherwise
                 error(['@section.subsref: unknown field or method: ' S(1).subs]);
         end
+        varargout{1} = obj;
     case '()'
         obj = obj.table(S(1).subs{:});
+        varargout{1} = obj;
     case '{}'
-        obj = obj.table{S(1).subs{:}};
+        % Overload the subsref method.
+%         subsrefcheck(obj.table, S);
+        [varargout{1:nargout}] = [builtin('subsref', obj.table, S)];
+        
+%         obj.table{makeitdouble(S(1).subs),makeitdouble(S(2).subs)};
+%         obj.table{S(2).subs{:}};
     otherwise
         error('@section.subsref: impossible case')
 end
@@ -39,6 +46,7 @@ end
 S = shiftS(S,1);
 if length(S) >= 1
     obj = subsref(obj, S);
+    varargout{1} = obj;
 end
 % end
 
