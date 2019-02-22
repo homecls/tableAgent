@@ -1,10 +1,14 @@
 @import "C:\Dropbox\YY_LL\PROJECTS\Tools_Markdown\style2.less"
 
-# tableAgent: chain-method table is a matlab class based on table
+# tableAgent: A chain-method table class in Matlab
 
-@tableAgent: A class for applying chain method on table in Matlab
+
 
 > Author: linrenwen@gmail.com
+
+# 1.1 objective
+
+@tableAgent: create a class for applying chain method on table in Matlab
 
 # 1.2 usage
 
@@ -56,6 +60,6 @@ Tagent.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
     .row().gen('G=pi');
 ```
 
-# 1.2 requirement
+# 1.3 requirement
 
 Matlab 2018b
