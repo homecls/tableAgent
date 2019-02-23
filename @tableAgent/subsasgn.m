@@ -31,8 +31,11 @@ switch S.type
                 B.(S.subs) = V;
             case fieldnames(obj.table)
                 B.table.(S.subs) = V;  
+            case obj.table.Properties.VariableNames
+                B.table.(S.subs) = V;    
             otherwise
-                error(['@page.subsasgn: field ' S.subs 'does not exist']);
+                B.table.(S.subs) = V;    
+                % error(['@page.subsasgn: field ' S.subs 'does not exist']);
         end
     otherwise
         error('@page.subsasgn: syntax error');

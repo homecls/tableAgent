@@ -1,5 +1,5 @@
 function sz = numArgumentsFromSubscript(t,s,context)
-% FIXME: this code is used to support the {}; 
+% FIXME: this code is used to support the {} in myclass definition; 
 % I do not understood this code, the code is borrowed from 
 % C:\Program Files\MATLAB\R2018a\toolbox\matlab\datatypes\@tabular\numArgumentsFromSubscript.m.
 % 
@@ -25,7 +25,13 @@ else % multiple subscripting levels
     if strcmp(s(1).type,'{}')
         x = t.subsrefBraces(s(1));
     elseif strcmp(s(1).type,'.')
-        if strcmp(s(1).subs,'Properties')
+        if ismember(s(1).subs,...
+                {'gen','row','col','genbygroup'...
+                ,'keeprow','keepcol','droprow','dropcol','groupby'}) % added by linrenwen@gmail.com
+            % sz = size(t)+[0,1];
+            sz = 1;
+            return;
+        elseif strcmp(s(1).subs,'Properties')
             if isequal(s(2).type,'.')
                 if length(s) == 2 % t.Properties.PropertyName
                     sz = 1; % no need to validate the name, subsref will do that

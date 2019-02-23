@@ -4,7 +4,7 @@ function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname,varargin)
 %
 %% INPUT
 % obj = 
-% idstr = 
+% idstr = command or expression of gen
 % TODO: DO NOT USE `FNHANDLE_TEMP_` AS COLNAME IN TABLE
 % F
 %% OUTPUT
@@ -45,30 +45,25 @@ function obj = gen(obj,idstr,FNHANDLE_TEMP_,fname,varargin)
 
 switch class(idstr)
 case {'string','char'}
-    % for example 'cola>3&colb>4' to 'T.cola > 3 & T.colb > 4'
-    idstrfull = strgenTransit(obj, idstr);
-    ISFUN = isa(FNHANDLE_TEMP_,'function_handle');
+    if nargin>=3
+        ISFUN = isa(FNHANDLE_TEMP_,'function_handle');
+    end
+    
     if nargin==4 && ISFUN
-        idstrfull = strrep(idstrfull,fname,'FNHANDLE_TEMP_');
+        idstr = strrep(idstr,fname,'FNHANDLE_TEMP_');
     elseif nargin>=3 && isstruct(FNHANDLE_TEMP_);
-        para = FNHANDLE_TEMP_;   
+        para = FNHANDLE_TEMP_;
+    elseif nargin==2
     else
         error('somthing is wrong for inputs');
     end
-    switch nargin
-    case {1,2}
-    case {4}
-        
-    otherwise
+    
+    
+    % for example 'cola>3&colb>4' to 'T.cola > 3 & T.colb > 4'
+    [obj,idstrfull] = strgenTransit(obj, idstr);
+    
 
-        
-    end
-
-    eval(idstrfull);
-case {'double'}
-    error('data type of arg is wrong')
-case {'logical'}
-    error('data type of arg is wrong')
+%     eval(idstrfull);
 otherwise
     error('the data type of idstr in wrong');
 end
@@ -85,9 +80,9 @@ end
 
 %% Part 5, Appendix
 
-function idstrfull = strgenTransit(obj, idstr)
+function [obj,idstrfull] = strgenTransit(obj, idstr)
     % for example 'cola >3&colb >4' to 'T.cola > 3 & T.colb > 4'
-    varsname =  string(obj.tableProperties.VariableNames)';
+    varsname =  string(obj.table.Properties.VariableNames)';
     [~, orderstr] = sort(strlength(varsname),'descend');
     varsname = varsname(orderstr);
     Tname = obj.tablename;
@@ -97,7 +92,7 @@ function idstrfull = strgenTransit(obj, idstr)
     idstrright = idstr(2);
 
     % left side of =
-    idstrleft = "obj.table." + idstrleft;
+    cmdstrleft = "obj.table." + idstrleft;
 
     % dealwith operators
     idstrright = strrepbatch_operator(idstrright);
@@ -106,9 +101,111 @@ function idstrfull = strgenTransit(obj, idstr)
     varsnameinT = "obj.table."+ varsname + "(obj.rowselected)";
     yxcols = cellstr([varsnameinT, varsname+" "]);
     idstrright = strrepbatch(idstrright, yxcols);
-
-    idstrfull = char(idstrleft + "(obj.rowselected)" + " = " + idstrright +";");
+    cmdstrright = makeitchar(idstrright);
+    resright = eval(cmdstrright);
     
+    % case for generate new col
+    nT = height(obj.table);
+    nrowselect = height(obj.table(obj.rowselected,1));
+    if ~ismember(idstrleft,varsname)
+            idstrleft = makeitchar(idstrleft);
+            obj.table.(idstrleft) = ...
+                missingData(resright,nT,1);
+    end
+    
+    
+    % case for repmat of 1 element 
+    if numel(resright) == 1
+        resright = repmat(resright,nrowselect,1);
+        
+        
+        idstrleft = makeitchar(idstrleft);
+        % case for datatype transformation of whole col
+        if nrowselect == nT
+            obj.table.(idstrleft) = resright;
+        else
+            obj.table.(idstrleft)(obj.rowselected) = resright;
+        end
+        
+    % case for repmat of nT elements
+    else
+        idstrleft = makeitchar(idstrleft);
+        obj.table.(idstrleft)(obj.rowselected) = resright;
+        
+    end
+    
+    
+%     
+%     
+%     switch class(resright)
+%          case {'string'}
+%             if numel(resright) == 1
+%                 resright = repmat(resright,nrowselect,1);
+%                 % case for generate new col
+%                 if ~ismember(idstrleft,varsname)
+%                     idstrleft = makeitchar(idstrleft);
+%                     obj.table.(idstrleft) =  repmat(string(missing),nT,1);
+%                 end
+%                 idstrleft = makeitchar(idstrleft);
+%                 if nrowselect == nT
+%                     obj.table.(idstrleft) = resright;
+%                 else
+%                     obj.table.(idstrleft)(obj.rowselected) = resright;
+%                 end
+%             else
+%                 idstrleft = makeitchar(idstrleft);
+%                 obj.table.(idstrleft)(obj.rowselected) = resright;
+%  
+%             end
+%         case {'double'}
+%             if numel(resright) == 1
+%                 resright = repmat(resright,nrowselect,1);
+%                 % case for generate new col of NaN
+%                 if ~ismember(idstrleft,varsname)
+%                     idstrleft = makeitchar(idstrleft);
+%                     obj.table.(idstrleft) = NaN(nT,1);
+%                 end
+%                 idstrleft = makeitchar(idstrleft);
+%                 if nrowselect == nT % case datatype transfer
+%                     obj.table.(idstrleft) = resright;
+%                 else
+%                     obj.table.(idstrleft)(obj.rowselected) = resright;
+%                 end
+%             else
+%                 idstrleft = makeitchar(idstrleft);
+%                 if nrowselect == nT 
+%                     obj.table.(idstrleft) = resright;
+%                 else
+%                     obj.table.(idstrleft)(obj.rowselected) = resright;
+%                 end
+%             end
+%             
+%         otherwise
+%             warning('FIXME: only double and string are supported!\n No grandtee for other data type!!\n');
+%             if numel(resright) == 1
+%                 resright = repmat(resright,nrowselect,1);
+%                 % case for generate new col of NaN
+%                 if ~ismember(idstrleft,varsname)
+%                     idstrleft = makeitchar(idstrleft);
+%                     obj.table.(idstrleft) = NaN(nT,1);
+%                 end
+%                 idstrleft = makeitchar(idstrleft);
+%                 if nrowselect == nT % case datatype transfer
+%                     obj.table.(idstrleft) = resright;
+%                 else
+%                     obj.table.(idstrleft)(obj.rowselected) = resright;
+%                 end
+%             else
+%                 idstrleft = makeitchar(idstrleft);
+%                 if nrowselect == nT 
+%                     obj.table.(idstrleft) = resright;
+%                 else
+%                     obj.table.(idstrleft)(obj.rowselected) = resright;
+%                 end
+%             end
+%     end
+
+    idstrfull = char(cmdstrleft + "(obj.rowselected)" + " = " + cmdstrright +";");
 end
 
 end

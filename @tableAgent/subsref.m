@@ -11,11 +11,12 @@ switch S(1).type
                 obj = obj.(S(1).subs);
             case methods(obj)
                 if areParensNext(S)
-                    obj = feval(S(1).subs, obj, S(2).subs{:});
+                    objB = feval(S(1).subs, obj, S(2).subs{:});
                     S = shiftS(S,1);
                 else
-                    obj = feval(S(1).subs, obj);
+                    objB = feval(S(1).subs, obj);
                 end
+                obj = objB;
             case fieldnames(obj.table)
                 obj = obj.table.(S(1).subs);
             case methods(obj.table)
@@ -30,13 +31,14 @@ switch S(1).type
         end
         varargout{1} = obj;
     case '()'
-        obj = obj.table(S(1).subs{:});
-        varargout{1} = obj;
+        obj.table = obj.table(S(1).subs{:});
+        varargout{1} = obj.table;
+        % S = shiftS(S,1);
     case '{}'
         % Overload the subsref method.
 %         subsrefcheck(obj.table, S);
         [varargout{1:nargout}] = [builtin('subsref', obj.table, S)];
-        
+        S = shiftS(S,1);
 %         obj.table{makeitdouble(S(1).subs),makeitdouble(S(2).subs)};
 %         obj.table{S(2).subs{:}};
     otherwise
@@ -44,9 +46,27 @@ switch S(1).type
 end
 
 S = shiftS(S,1);
+% if numel(S)>=1;
+%     struct2table(S)
+% end
 if length(S) >= 1
-    obj = subsref(obj, S);
-    varargout{1} = obj;
+    if istable(obj)
+        obj0 = tableAgent(obj);
+        obj0.table = obj;
+        % objx = copy(obj);
+    elseif isa(obj,'tableAgent')
+%         TempTable = obj.table;
+%         obj0 = tableAgent(TempTable);
+%         obj0.table = TempTable; 
+%         obj0 = copy(obj);
+    else
+        % struct2table(S)
+        error('return of it should be table or tableagent class')
+    end
+    % struct2table(S)
+    obj2 = subsref(obj, S);
+    
+    varargout{1} = obj2;
 end
 % end
 

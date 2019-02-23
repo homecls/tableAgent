@@ -1,5 +1,5 @@
 % OBJECTIVE: Calculate #####
-function obj = row(obj,idstr)
+function obj = col(obj,idstr)
 % obj = fn(obj,idstr)
 %
 %% INPUT
@@ -26,8 +26,9 @@ narginchk(1,2)
 if nargin == 1
     obj.rowselected = 1:height(obj.table);
 return;
-else
-    switch class(idstr)
+end
+
+switch class(idstr)
     case {'string','char'}
         % for example 'cola>3&colb>4' to 'T.cola > 3 & T.colb > 4'
         idstrfull = strrow2strtablerow(obj, idstr);
@@ -38,11 +39,7 @@ else
         obj.rowselected = idstr;
     otherwise
         error('the data type of idstr in wrong');
-    end
-    
 end
-
-
 % idstr;
 
 %% Part 2, Calculation
@@ -58,10 +55,10 @@ end
 
     function idstrfull = strrow2strtablerow(obj, idstr)
         % for example 'cola >3&colb >4' to 'T.cola > 3 & T.colb > 4'
-        varsname =  string(obj.table.Properties.VariableNames)';
+        varsname =  string(obj.tableProperties.VariableNames)';
         [~, orderstr] = sort(strlength(varsname),'descend');
         varsname = varsname(orderstr);
-%         Tname = obj.tablename;
+        Tname = obj.tablename;
         %     varsnameinT = Tname +"."+ varsname;
         varsnameinT = "obj.table."+ varsname;
         idstr = strrepbatch_operator(idstr);

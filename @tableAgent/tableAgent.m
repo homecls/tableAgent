@@ -1,4 +1,4 @@
-classdef tableAgent < handle
+classdef tableAgent %< matlab.mixin.Copyable
     % ---------------------------------------------------------------
     properties (Access = public)
         % properties of data
@@ -8,7 +8,12 @@ classdef tableAgent < handle
         
         
         rowselected
+        colselected
         variablestored
+        ISGROUPED
+        groupid
+        groupno
+        groupvar
         
         % properties of id
         idnames
@@ -27,74 +32,122 @@ classdef tableAgent < handle
         datetime
         frequency
         istimeContinuous
-
+        
         % properties of panel
         isbalanced
     end
-
+    
     % ---------------------------------------------------------------
     methods
         function [obj] = tableAgent(Tab,varargin)
-            obj.table = Tab;
-            obj.tablename = inputname(1);
-            obj.tableProperties = Tab.Properties;
-            obj.rowselected = true(height(Tab),1);
-            narginchk(1,2);
-            % obj.frequency = 'monthly';
-            switch nargin
-                case {1}
-                    
-                case {2} 
-                    % #2argin == [id time]
-                    % get the idnames
-                    it = (varargin{1});
-                    obj.idnames = it(1:end-1);
-                    nid = numel(obj.idnames);
-                    for ii=1:nid
-                        obj.(char("id"+ii)) = Tab.(char(it(ii)));
-                    end
-                    
-                    % get the time and convert it to datenumeom
-                    time = Tab.(char(it(end)));
-                    switch lower(obj.frequency)
-                        case {'month','monthly'}
-                            tdatenum = makeitDatenum(time);
-                            tdatenumEom = makeitEom(tdatenum);
-                            obj.datenumOrg = tdatenum;
-                            obj.datenum = tdatenumEom;
-                            obj.datenumEom = tdatenumEom;
-                            obj.datestr = datestr(tdatenumEom);
-                            obj.datetime = datetime(tdatenumEom,'ConvertFrom','datenum');
-                            % export the time variables to table
-                            obj.table.Datenum = obj.datenum;
-                            obj.table = retimeTableMonthlyEomWithAllMonthInYear(obj.table,'Datenum');
-%                             obj.table.Datetime = obj.datetime;
-%                             obj.table.Datestr = obj.datestr;
-                        case {'year','yearly'}
-                            tdatenum = makeitDatenum(time);
-                            tdatenumEom = makeitEom(tdatenum);
-                            obj.datenumOrg = tdatenum;
-                            obj.datenum = tdatenumEom;
-                            obj.table.Datenum = obj.datenum;
-                            obj.table.Datetime = obj.datetime;
-                            obj.table.Datestr = obj.datestr;
-                        case {'quarter','quarterly'}
-                        otherwise
-                            
-                    end
-                case {3} 
-                    % #3 argin == frequency
-                otherwise
-                    error("# of arg is is wrong")
+            narginchk(0,2);
+            if nargin==0
+                obj.table = table;
+                obj.tablename = '';
+                obj.rowselected = [];
+                obj.colselected = [];
+            else
+                obj.table = Tab;
+                obj.tablename = inputname(1);
+                obj.tableProperties = Tab.Properties;
+                obj.rowselected = true(height(Tab),1);
+                
             end
         end
-    % 
-    % methods of . and () acess
+        % get functions
+        function val = get.rowselected(obj)
+            if isempty(obj.rowselected)
+               val = 1:height(obj.table);
+            else
+                val = obj.rowselected;
+            end
+        end
+        
+        function val = get.colselected(obj)
+            if isempty(obj.colselected)
+               val = 1:width(obj.table);
+            else
+                val = obj.colselected;
+            end
+        end
+        
+        function val = get.ISGROUPED(obj)
+            if isempty(obj.ISGROUPED)
+                val = false;
+            else
+                val = obj.ISGROUPED;
+            end
+        end
+        
+        % disp function
+        function [obj] = disp(obj)
+            fprintf('A %s class based on table\n',class(obj));
+            fprintf('\tobj.ISGROUPED \t\t= %g\n',obj.ISGROUPED)
+            nrowSelected = numel(obj.rowselected);
+            ncolSelected = numel(obj.colselected);
+            [nrow,ncol] = size(obj.table);
+            fprintf('\tobj.rowselected \t= %g/%g\n',nrowSelected,nrow)
+            fprintf('\tobj.colselected \t= %g/%g\n\n  ',ncolSelected,ncol)
+            display(obj.table);
+        end
+        
+        function [obj] = dispclass(obj)
+            fprintf('A %s class based on table\n',class(obj));
+            fprintf('\tobj.ISGROUPED \t\t= %g\n',obj.ISGROUPED)
+            nrowSelected = numel(obj.rowselected);
+            ncolSelected = numel(obj.colselected);
+            [nrow,ncol] = size(obj.table);
+            fprintf('\tobj.rowselected \t= %g/%g\n',nrowSelected,nrow)
+            fprintf('\tobj.colselected \t= %g/%g\n\n  ',ncolSelected,ncol)
+            display(obj.table);
+        end
+        
+        
+        % methods of . and () acess
         obj = row(obj,idstr)
+        obj = col(obj,strcol)
+        obj = droprow(obj,strcol)
+        obj = dropcol(obj,strrow)
+        obj = keeprow(obj,strcol)
+        obj = keepcol(obj,strrow)
         obj = gen(obj,strcmd,fn1,fn2)
-        a = subsref(obj,S)
-        obj = subsasgn(obj, S, V)
+
+        
         tf = areParensNext(S)
         sz = numArgumentsFromSubscript(t,s,context)
+        Tsummary = summary(obj, colstr, rowstr, colsofsummary)
+        rowdoble = rowstr2rowdouble(obj, idstr)
+        [coldouble, colcellstr]= colstr2coldouble(obj, strcol)
+        
+        varargout = subsref(obj,S)
+        obj = subsasgn(obj, S, V)
+        [b,varargout] = subsrefDot(t,s)
+
+        % function define for group
+        obj = groupby(obj,colstr,coly,fn,colx)
+        obj = genbygroup(obj,cmdstr,FNHANDLE_TEMP_,fname,varargin)
+        
+        % function copy key properties
+        function obj = copykeyproperties(obj,obj1)
+            % obj = tableAgent;
+            % obj.table = obj1.table;
+            obj.colselected = obj1.colselected;
+            obj.rowselected = obj1.rowselected;
+            obj.groupid = obj1.groupid;
+            obj.groupno = obj1.groupno;
+            obj.ISGROUPED = obj1.ISGROUPED;      
+        end
+        
     end % method
+    methods(Access = protected)
+        % Override copyElement method:
+        function cp = copyElement(obj)
+            cp = tableAgent;
+            cp.table = obj.table;
+            cp.colselected = obj.colselected;
+            cp.rowselected = obj.rowselected;
+        end
+    end
+    
+
 end % classdef
