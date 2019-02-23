@@ -1,31 +1,55 @@
 @import "C:\Dropbox\YY_LL\PROJECTS\Tools_Markdown\style2.less"
 
+
+
+
 <!-- https://github.com/okomarov/tableutils -->
+
+
 
 # tableAgent: A chain-method table class in Matlab
 
+<!-- TOC depthTo:2 -->
 
+- [tableAgent: A chain-method table class in Matlab](#tableagent-a-chain-method-table-class-in-matlab)
+  - [1.1 objective](#11-objective)
+  - [1.2 Install](#12-install)
+  - [1.3 usage](#13-usage)
+  - [1.4 requirement](#14-requirement)
+
+<!-- /TOC -->
 
 > Author: linrenwen@gmail.com
 
-# 1.1 objective
+## 1.1 objective
 
 @tableAgent: create a class for applying chain method on table in Matlab
 
-# 1.2 usage
+## 1.2 Install
+
+TODO:
+
+## 1.3 usage
 
 >See ./tableAgent_test.m for List of features.
 
 ### data construction
 
 ``` matlab
-%% data construction
+%% data construction method 1
 T = tableAgent;
 T.name = ["Joan","Merry","Tom","Kate"]';
 T.sex = ["male","female","male","female"]';
 T.grade = [99,67,66,35]';
 T.G = [99,67,88,55]'+ 4;
+
+%% data construction method 2
+T = table;
+T.name = ["Joan","Merry","Tom",
+TB = tableAgent(T);
 ```
+
+
 
 ### generate new col or variable, by passing variable x
 
@@ -81,7 +105,7 @@ TB =T.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
     .row().gen('G=pi');
 ```
 
-### test of disp
+### disp
 
 ``` matlab
 %% test of disp
@@ -92,6 +116,6 @@ disp(T);
 disp(T.table);
 ``` 
 
-# 1.3 requirement
+## 1.4 requirement
 
 Matlab 2018b
