@@ -27,7 +27,9 @@
 
 ## 1.2 Install
 
-TODO:
+1. copy the file in `@tableAgent` folder
+2. unzip the `tableAgent_test.zip`. copy the files in `functions` fold inside zip file
+3. run `tableAgent_test.m` 
 
 ## 1.3 usage
 

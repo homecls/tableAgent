@@ -30,16 +30,16 @@ T.name = ["Joan","Merry","Tom","Kate"]';
 T.sex = ["male","female","male","female"]';
 T.grade = [99,67,66,35]';
 T.G = [99,67,88,55]'+ 4;
-return;
+% return;
 
 %%  method 2
 Ttable = table;
 Ttable.name = ["Joan","Merry","Tom"]';
 Ttable.grade = [99,67,35]';
 Ttable.G = [99,67,35]'+ 4;
-T2 = tableAgent(Ttable);
-clear Ttable T2
-return;
+TB = tableAgent(Ttable);
+clear TB
+% return;
 
 %% test by group gen
 TB = T.row('G>=60').groupby('sex').genbygroup('Gmean = mean(G)');
@@ -51,25 +51,25 @@ TB = T.row([1,4]).groupby('sex').genbygroup('SexPlus = G+1')...
 
 % T = T.gen('SexPlus=string(missing)').row('G>=60').groupby('sex').genbygroup('SexPlus = sex+"plus"');
 
-return
+% return
 %% test by gen
 
-T2 = T.gen('Gmean="good"');
-T = T.gen('Gmean=1');
-T = T.gen('Gmean=NaT');
+TB = T.gen('Gmean="good"');
+TB = T.gen('Gmean=1');
+TB = T.gen('Gmean=NaT');
 % T = T.gen('Gmean="bad"');
 % T = T.gen('Gmean=G+1');
 
 % T = T.gen('Gmean=NaN').row('G>=60').groupby('sex').genbygroup('Gmean = mean(G)');
 
 
-return;
+% return;
 %% test of groupby
 % T = T.groupby('sex')
 T2 = T.groupby('sex','Gmean',@(x)mean(x),'G');
 
 
-return;
+% return;
 %% test gen new cols or vars
 TB = T.row('name=="Merry"').gen('G2=G+3')...
     .row([1,3]).gen('G2=G+9');
@@ -81,15 +81,16 @@ TB = T.keeprow([1,3,4]);
 TB = T.dropcol(2).row(3).droprow().keepcol('name,G');
 
 TB = T.droprow('G==71');
-TB = T.row(1).droprow()
-return;
+TB = T.row(1).droprow();
+% return;
+
 %% Test of assign
 T.gen('G=grade+4');
 d1 = T{1,'G'};
 TB = T(1:3,2:3).row(1).gen('G3=grade+5');
 d2 = TB{1,3};
 assert(d2-d1==1,'fail to item should equal')
-return;
+% return;
 
 %% Test of passing variable-para x
 para.x = [1,1]';
@@ -107,12 +108,7 @@ T{1,1} = "Joan,Hi";
 disp(T.table)
 
 
-
-
-
-
-
-%% Part 3, a long example
+%% a long example
 TB = T.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
     .row('grade<=99').gen('G = log(grade)*10')...
     .row([1,3]).gen('G=3')...
@@ -127,5 +123,5 @@ disp(T.table);
 % FIXME: T.row(1,3).dispclass; are not supported, since no 'subsrefDot' for
 % tablAgent class
 
-return;
+% return;
  
