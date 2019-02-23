@@ -1,5 +1,7 @@
 @import "C:\Dropbox\YY_LL\PROJECTS\Tools_Markdown\style2.less"
 
+<!-- https://github.com/okomarov/tableutils -->
+
 # tableAgent: A chain-method table class in Matlab
 
 
@@ -11,6 +13,8 @@
 @tableAgent: create a class for applying chain method on table in Matlab
 
 # 1.2 usage
+
+>See ./tableAgent_test.m for List of features.
 
 ### data construction
 ``` matlab
