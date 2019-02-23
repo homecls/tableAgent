@@ -19,6 +19,7 @@
 ### data construction
 
 ``` matlab
+%% data construction
 T = tableAgent;
 T.name = ["Joan","Merry","Tom","Kate"]';
 T.sex = ["male","female","male","female"]';
@@ -39,8 +40,8 @@ TB = T.row([1,2]).gen('Gx=grade + para.x',para);
 ``` matlab
 %% Test of passing inline-function para
 fnew = @(x)(x+3);
-T.row().gen('G=fnew(pi)',fnew,'fnew');
-T.row().gen('G2=fnew(pi)',fnew,'fnew');
+TB = T.row().gen('G=fnew(pi)',fnew,'fnew');
+TB = T.row().gen('G2=fnew(pi)',fnew,'fnew');
 ```
 
 ### generate new col by group operation
@@ -50,6 +51,17 @@ T.row().gen('G2=fnew(pi)',fnew,'fnew');
 TB = T.row('G>=60').groupby('sex').genbygroup('SexPlus = G+1')...
     .genbygroup('SexPlus = sex+"plus"');
 ```
+
+### test of dropcols and droprows
+
+``` matlab
+TB = T.row([1,2]).droprow('G==71');
+TB = T.keeprow([1,3,4]);
+TB = T.dropcol(2).row(3).droprow().keepcol('name,G');
+
+TB = T.droprow('G==71');
+TB = T.row(1).droprow()
+``` 
 
 ### index of table Agent
 
@@ -68,6 +80,17 @@ TB =T.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
     .row([1,3]).gen('G=3')...
     .row().gen('G=pi');
 ```
+
+### test of disp
+
+``` matlab
+%% test of disp
+T = T.row([1,2]);
+T.gen('G=2').dispclass;
+dispclass(T);
+disp(T);
+disp(T.table);
+``` 
 
 # 1.3 requirement
 
