@@ -29,7 +29,6 @@ T = tableAgent;
 T.name = ["Joan","Merry","Tom","Kate"]';
 T.sex = ["male","female","male","female"]';
 T.grade = [99,67,66,35]';
-
 T.G = [99,67,88,55]'+ 4;
 return;
 
