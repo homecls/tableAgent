@@ -33,7 +33,7 @@
 
 ## 1.3 usage
 
->See ./tableAgent_test.m for List of features.
+>See `tableAgent_test.m` for List of features.
 
 ### data construction
 
