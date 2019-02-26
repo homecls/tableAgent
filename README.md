@@ -27,14 +27,16 @@
 
 ## 1.2 Install
 
-1. unzip the `tableAgent_test.zip`. copy the files in `functions` fold inside zip file
+All files you need is located in `tableAgent_test.zip`.
+
+1. unzip the `tableAgent_test.zip`. and add the folder to matlab path.
 2. run `tableAgent_test.m` for  examples.
 
 ## 1.3 usage
 
->See `tableAgent_test.m` for List of features.
+>See `tableAgent_test.m` for List of all features.
 
-### data construction
+### data **construction**
 
 ``` matlab
 %% data construction method 1
