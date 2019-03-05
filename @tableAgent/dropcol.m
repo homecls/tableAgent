@@ -29,6 +29,7 @@ else
     coldouble = obj.colselected;
 end
 obj.table(:,coldouble) = [];
+obj.colselected = [];
 
 
 %% Part 2, Calculation

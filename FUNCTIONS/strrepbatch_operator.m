@@ -30,6 +30,7 @@ yxops = [" .^ ", ".^";
     " | ", "|";
     " && ", "&  &";
     " || ", "|  |";
+    " , ", ",";
     ];
     % yxops = cellstr([strop,strtrim(strop)]);
     % yxops = strop;

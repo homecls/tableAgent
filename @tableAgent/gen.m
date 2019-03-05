@@ -95,7 +95,7 @@ function [obj,idstrfull] = strgenTransit(obj, idstr)
     cmdstrleft = "obj.table." + idstrleft;
 
     % dealwith operators
-    idstrright = strrepbatch_operator(idstrright);
+    idstrright = strcat({' '},strrepbatch_operator(idstrright),{' '});
     
     % right side of =
     varsnameinT = "obj.table."+ varsname + "(obj.rowselected)";

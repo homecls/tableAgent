@@ -26,17 +26,24 @@ switch S(1).type
                 else
                     obj = feval(S(1).subs, obj.table);
                 end
+            case setdiff(obj.label,fieldnames(obj.table))
+                [~,idlabel] = ismember(S(1).subs,obj.label);
+                vnames = obj.table.Properties.VariableNames;
+                vname = vnames{idlabel};
+                obj = obj.table.(vname);
             otherwise
                 error(['@section.subsref: unknown field or method: ' S(1).subs]);
         end
         varargout{1} = obj;
     case '()'
+        S = colstr2coldoubleRobust(obj,S); % function defined this function
         obj.table = obj.table(S(1).subs{:});
         varargout{1} = obj.table;
         % S = shiftS(S,1);
     case '{}'
         % Overload the subsref method.
-%         subsrefcheck(obj.table, S);
+        %         subsrefcheck(obj.table, S);
+        S = colstr2coldoubleRobust(obj,S);
         [varargout{1:nargout}] = [builtin('subsref', obj.table, S)];
         S = shiftS(S,1);
 %         obj.table{makeitdouble(S(1).subs),makeitdouble(S(2).subs)};
@@ -59,6 +66,9 @@ if length(S) >= 1
 %         obj0 = tableAgent(TempTable);
 %         obj0.table = TempTable; 
 %         obj0 = copy(obj);
+    elseif iscell(obj)
+        % FIXME: case T.table.Properties.VariableNames({'Var1'})
+        return;
     else
         % struct2table(S)
         error('return of it should be table or tableagent class')
@@ -67,6 +77,26 @@ if length(S) >= 1
     obj2 = subsref(obj, S);
     
     varargout{1} = obj2;
+end
+end
+%% appendix
+function S = colstr2coldoubleRobust(obj,S)
+% TB{:,'地区,所属市'} = {''}
+if numel(S(1).subs)==2
+    % case TB{:,'地区,所属市'}
+    colsdouble = colstr2coldouble(obj,S(1).subs{2});
+    if colsdouble == 0
+        colsdouble = colstrLabel2coldouble(obj,S(1).subs{2});
+        
+        if colsdouble == 0
+            colsdouble = S(1).subs{2};
+        end
+
+    end
+    
+    S(1).subs{2} = colsdouble;
+end
+
 end
 % end
 

@@ -38,6 +38,8 @@ Ttable.name = ["Joan","Merry","Tom"]';
 Ttable.grade = [99,67,35]';
 Ttable.G = [99,67,35]'+ 4;
 TB = tableAgent(Ttable);
+TB{:,'地区,所属市'} = {'星星'}
+TB(:,'地区,所属市')
 clear TB
 % return;
 
@@ -82,6 +84,7 @@ TB = T.dropcol(2).row(3).droprow().keepcol('name,G');
 
 TB = T.droprow('G==71');
 TB = T.row(1).droprow();
+% T.droprow('ismember(Var1,{''晋中市''})')
 % return;
 
 %% Test of assign
@@ -106,7 +109,9 @@ TB = T.row().gen('G2=fnew(pi)',fnew,'fnew');
 T{1,2:3} = [33,55]; %FIXME: 33 Will Be change to "33" in this case;
 T{1,1} = "Joan,Hi";
 disp(T.table)
-
+% TB.('地区') = '';
+% TB.('地区') = "222";
+% TB.('地区')(1:2) ={'3'};
 
 %% a long example
 TB = T.row('grade==67|grade<38').gen('grade = grade+1').gen('G = grade*2')...
@@ -121,6 +126,8 @@ dispclass(T);
 disp(T);
 disp(T.table);
 % FIXME: T.row(1,3).dispclass; are not supported, since no 'subsrefDot' for
+% FIXME: case will work: T.table.Properties.VariableNames({'Var1'}) = {'aaa'};
+
 % tablAgent class
 
 % return;

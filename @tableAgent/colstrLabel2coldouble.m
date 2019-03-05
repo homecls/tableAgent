@@ -1,4 +1,4 @@
-function [coldouble, colcellstr]= colstr2coldouble(obj, strcol, rowno)
+function [coldouble, colcellstr]= colstrLabel2coldouble(obj, strcol, rowno)
 % case 1, T.col('Var.?$').keepcol
 % case 2, T.col('Var1,Var2').keepcol
 % case 3, T.col(["cola", "colb"]).keepcol
@@ -14,7 +14,7 @@ function [coldouble, colcellstr]= colstr2coldouble(obj, strcol, rowno)
     else
        varnames = obj.Properties.VariableNames;
     end
-    
+    labelnames = obj.label;
     
     opt = class(strcol);
     switch opt
@@ -23,25 +23,28 @@ function [coldouble, colcellstr]= colstr2coldouble(obj, strcol, rowno)
         % case 1, T.col('Var1,Var2').keepcol
         strcolString = string(strcol);
         if contains(strcolString,[".*",".+",".?","^","$"])
-            varnamesString = string(varnames);
-            tfsRaw = regexpcell(varnamesString,strcol);
+            labelnamesString = string(labelnames);
+            tfsRaw = regexpcell(labelnamesString,strcol);
 %             tfs = logical(makeitdouble(tfsRaw));
             colcellstr = varnames(tfsRaw);
             coldouble = find(tfsRaw);
         else
-            colcellstr = strtrim(strsplit(strcol, ','));
-            [~,coldouble] = ismember(colcellstr,varnames);
+            labelcellstr = strtrim(strsplit(strcol, ','));
+            [~,coldouble] = ismember(labelcellstr,labelnames);
+            colcellstr = varnames(coldouble);
+            
         end
         return
     case 'string'
-        colcellstr = strtrim(cellstr(strcol));
-        [~,coldouble] = ismember(colcellstr,varnames);
+        labelcellstr = strtrim(cellstr(strcol));
+        [~,coldouble] = ismember(labelcellstr,labelnames);
+        colcellstr = varnames(coldouble);
         return
 
     case 'cell'
         if iscellstr(strcol)
-            [~,coldouble] = ismember(strcol,varnames);
-            colcellstr = strcol;
+            [~,coldouble] = ismember(strcol,labelnames);
+            colcellstr = varnames(coldouble);
         else
             error('arg of strcol should be cellstr, if its a cell')
             error('col name:%s you type in are not match in tableAgent.',...

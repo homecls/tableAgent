@@ -15,6 +15,7 @@
   - [1.1 objective](#11-objective)
   - [1.2 Install](#12-install)
   - [1.3 usage](#13-usage)
+  - [TODO and FIXME](#todo-and-fixme)
   - [1.4 requirement](#14-requirement)
 
 <!-- /TOC -->
@@ -118,6 +119,25 @@ dispclass(T);
 disp(T);
 disp(T.table);
 ``` 
+
+## TODO and FIXME
+
+TODO: 
+
+1. about row
+   (1) gen_slice
+2. about col
+   (1) col: and new feature, select cols by regexp matching
+   (2) label properties supporting UTF8 colname/variable name.
+   (3) collabel: select cols by label
+   (4) gen_eachCol2
+
+FIXME:
+1. refresh colselected and rowselected properties after calling drop and keep cols and rows
+
+
+
+
 
 ## 1.4 requirement
 

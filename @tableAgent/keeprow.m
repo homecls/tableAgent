@@ -31,11 +31,12 @@ end
 
 %% get cols to drop
 nrow = height(obj.table);
-coltodrop = true(nrow,1);
-coltodrop(rowdouble) = false;
+rowtodrop = true(nrow,1);
+rowtodrop(rowdouble) = false;
 
 %%
-obj.table(coltodrop,:) = [];
+obj.table(rowtodrop,:) = [];
+obj.rowselected = [];
 
 
 end

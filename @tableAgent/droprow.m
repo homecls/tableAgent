@@ -27,8 +27,10 @@ if nargin==1
 else
     obj = obj.row(rowstr);
     rowdouble = obj.rowselected;
+    
 end
 obj.table(rowdouble,:) = [];
+obj.rowselected = [];
 
 
 %% Part 2, Calculation
