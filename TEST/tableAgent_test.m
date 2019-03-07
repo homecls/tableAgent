@@ -81,8 +81,11 @@ TB = T;
 TB{1,8:9} = [1,125];
 disp(TB{1,5});
 TB{1,1} = {'SMITH'};
-data1 = T{[1,3,6],'Age'}; % TODO: data1 = T{'Age<20','Age'};
-data2 = TB{1,3};
+data1 = T([1,3,6],'s.*') % select cols by regexp matching
+data2 = T([1,3,6],'^S.*') % select cols by regexp matching
+data3 = T([1,3,6],'c$') % select cols by regexp matching
+data4 = T{[1,3,6],'Age'} % TODO: data1 = T{'Age<20','Age'};
+data5 = TB{1,3};
 % ``` 
 
 %% ## chain method demo

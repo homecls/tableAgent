@@ -81,8 +81,11 @@ TB = T;
 TB{1,8:9} = [1,125];
 disp(TB{1,5});
 TB{1,1} = {'SMITH'};
-data1 = T{[1,3,6],'Age'}; % TODO: data1 = T{'Age<20','Age'};
+data1 = T([1,3,6],'s.*') % select cols by regexp matching
+data2 = T([1,3,6],'^s.*') % select cols by regexp matching
+data3 = T{[1,3,6],'Age'}; % TODO: data1 = T{'Age<20','Age'};
 data2 = TB{1,3};
+
 % ``` 
 
 %% ## chain method demo
@@ -182,6 +185,19 @@ colsTarget = colsA;
 TB = T.blockExchange(rowsA,colsA,rowsTarget,colsTarget);
 TB = T.blockCopy(rowsA,colsA,rowsTarget,colsTarget);
 
+% ###  Function declare: merge
+TB = T.gen('Age3 = Age+100');
+TC = TB([1,2],[1,11]);
+TM = T.merge(TC,'LastName');
+
+% ###  Function declare: query
+keyA = 'LastName';
+keyB = keyA;
+valsA = 'Age3';
+valsB = 'Age3';
+
+TM = T.queryTabAinTabB(keyA,valsA,TC,keyB,valsB);
+
 % ### Function declare: stack
 TB = tableAgent;
 TB.Month = {'October';'November';'December';...
@@ -192,8 +208,7 @@ TB.MidAtl = [1.1865; 1.4120; 1.6043; 1.8830; 2.1227; 1.9920];
 TB.SAtl = [1.2730; 1.5820; 1.8625; 1.9540; 2.4803; 2.0203];
 
 TC = TB.stack('NE,MidAtl,SAtl');
-TC = TB.unstack('NE,MidAtl,SAtl');
- 
+
 TD = TC.unstack('NE_MidAtl_SAtl','NE_MidAtl_SAtl_Indicator');
 
 % stackCell
@@ -203,14 +218,6 @@ TM{1,1:5} = TM.table.Properties.VariableNames;
 TN = TM.stackCell('loc,Value',(1:6),(1:2),([3,4,5]));
 % TM.stackCell(vnameRowandColval,rows,colsID,colsVal)
 
-
-% ###  Function declare: merge
-TB = T.gen('Age3 = Age+100');
-TC = TB([1,2],[1,11]);
-TM = T.merge(TC,'LastName');
-
-% ###  Function declare: query
-[obj,lia,TinAnotB,TinBnotA] = queryTabAinTabB(obj,keyA,valsA,TB,keyB,valsB,varargin)
 
 %% ##  test of disp
 T.disp
