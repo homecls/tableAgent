@@ -47,14 +47,11 @@ TB.No = 1:TB.height;
 TC = TB.row([2:16]).gen_slice('HH',["Value>7000","2"; "Value<2000","11"]);
 
 
-%% ### test for gen_foreachcol
+%% test for gen_foreachcol
 T = TC; 
 atable = T.table;
 T.gen_forEachCol('No,Year','$x+4');
 TB = T.gen_forEachCol('No,Year','$x+4','$x_add');
-
-%% ### test gen_slice
-TB = T.row().gen_slice('HH',["ismember(LastName,{'Smith','Jones'})","Name"; "ismember(Gender,{'Female'})","female"]);
 
 %% test gen_slice
 % TB = T.row().gen_slice('HH',["Value>7000","2"; "Value<7000","11"])

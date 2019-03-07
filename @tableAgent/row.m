@@ -35,7 +35,7 @@ else
         try
             obj.rowselected = eval(idstrfull);
         catch
-            error('%s\n not find in row()function ',idstrfull);
+            error('%s\n not availiable, in row(.) function!',idstrfull);
         end
     case {'double'}
         obj.rowselected = idstr;

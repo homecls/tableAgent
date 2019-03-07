@@ -26,13 +26,18 @@ function obj = gen_slice(obj, coly, ifthenGen)
 
 %% Part 1, Data
 variableNames = obj.table.Properties.VariableNames;
-coly2 = colstr2coldouble(obj,coly);
-if coly2==0
+coly2 = strCommaSemicolon2cellstr(coly);
+
+if ischar(coly2)
+    coly2 = coly2;
+    
+elseif coly2==0
     coly2 = coly;
 
 else
     coly2 = variableNames(coly2);
 end
+
 ifthenGen2 = strCommaSemicolon2cellstr(ifthenGen);
 strrow = ifthenGen2(:,1);
 strCmdGen = strcat(coly2,{' = '},ifthenGen2(:,2),{' ;'});
@@ -59,17 +64,23 @@ if any(indexOtherwise)
     strCmdGenOtherwise = strCmdGen{idelse} ;
     strrow(idelse) = [];
     strCmdGen(idelse) = [];
-end
+    end
+end % if else/otherwise term occurs
 
 irows = false(nHeight,nCmd);
 nCmdCut = numel(strCmdGen);
 for iCmd = 1:nCmdCut
     [obj,irowsRaw] = obj.row(strrow{iCmd});
-       
+    
     irow = irowsRaw & rowselectedReserve;
     obj = obj.row(irow).runCmdGen(strCmdGen{iCmd});
     
     irows(:,iCmd) = irow(:);
+end
+rowCount = sum(irows,2);
+IDrowCountDuplication = (rowCount >1);
+if any(IDrowCountDuplication)
+    warning('row #%s, are modified more one time!',strjoin(string(find(IDrowCountDuplication)),', '))
 end
 irowOtherwise = ~any(irows,2);
 if HASOTHERWISE
@@ -79,10 +90,10 @@ end
 
 obj.rowselected = rowselectedReserve;
 
+
+
 %% Part 3, Output of result
 
+end % function
 
-%% Part 4, Demo of result
 
-
-end

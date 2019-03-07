@@ -45,6 +45,9 @@ function [obj,cmdstrFull] = runCmdGen(obj,cmdstr)
     cmdstrright = strrepbatch(cmdstrright, yxcols);
     cmdstrright = makeitchar(cmdstrright);
     resright = eval(cmdstrright);
+    if ischar(resright) 
+        resright = makeitcellstr(strtrim(resright));
+    end
     
     % case for generate new col
     nT = height(obj.table);
@@ -75,9 +78,16 @@ function [obj,cmdstrFull] = runCmdGen(obj,cmdstr)
         
     % case for repmat of nT elements
     elseif nResRight == nrowselect
+        if nrowselect == nT
+        cmdstrleft = makeitchar(cmdstrleft);
+        obj.table.(cmdstrleftRaw) = resright; % run the cmd
+        cmdstrFull = char(cmdstrleft + "" + " = " + cmdstrright +";");
+        
+        else
         cmdstrleft = makeitchar(cmdstrleft);
         obj.table.(cmdstrleftRaw)(obj.rowselected) = resright; % run the cmd
         cmdstrFull = char(cmdstrleft + "(obj.rowselected)" + " = " + cmdstrright +";");
+        end
         return;
     else
         error('the numel of gen should eithor be n Row selected or 1')

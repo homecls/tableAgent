@@ -9,7 +9,8 @@ switch dclass
         if contains(cololdnew,",")
             colsoldnewCellstr = strCommaSemicolonSplit(cololdnew);
         else
-            error('the char input should be with ",;"');
+            colsoldnewCellstr = cololdnew;
+            warning('the char "%s" columnname-input should be with ",;"', cololdnew);
         end
     case 'string'
         colsoldnewCellstr = cellstr(cololdnew);
