@@ -13,8 +13,8 @@ classdef tableAgent %< matlab.mixin.Copyable
         colselected
         variablestored
         ISGROUPED
-        groupid
-        groupno
+        % groupid
+        % groupno
         groupvar
         
         % properties of id
@@ -26,17 +26,17 @@ classdef tableAgent %< matlab.mixin.Copyable
         
         %properties of time
         
-        time
-        datenumOrg
-        datenum
-        datenumEom
-        datestr
-        datetime
-        frequency
-        istimeContinuous
+        %time
+        %datenumOrg
+        %datenum
+        %datenumEom
+        %datestr
+        %datetime
+        %frequency
+        %istimeContinuous
         
         % properties of panel
-        isbalanced
+        %isbalanced
     end
     
     % ---------------------------------------------------------------
@@ -68,11 +68,7 @@ classdef tableAgent %< matlab.mixin.Copyable
         
         % get functions
          function val = get.Properties(obj)
-             %             if isempty(obj.rowselected)
-             %                val = 1:height(obj.table);
-             %             else
              val = obj.table.Properties;
-             %             end
         end
         
         function val = get.rowselected(obj)
@@ -93,7 +89,7 @@ classdef tableAgent %< matlab.mixin.Copyable
         
         function val = get.label(obj)
             if isempty(obj.label)
-               val = obj.table.Properties.VariableNames;
+               val = obj.table.Properties.VariableNames; % FIXME: cellstr or table?
             else
                 val = obj.label;
             end
@@ -111,7 +107,6 @@ classdef tableAgent %< matlab.mixin.Copyable
         % function definition: disp
         function obj = disp(obj)
             display(obj.table);
-            % obj = obj.table;
        end
         
         % function definition: dispclass 
@@ -132,6 +127,7 @@ classdef tableAgent %< matlab.mixin.Copyable
             cprintf('blue','\n\tThe Data of obj.table\n');
             disp(obj.table);
         end
+        
         function [obj] = dispBasicProperties(obj)
             cprintf('blue','\n\tA %g¡Á%g "%s" class, based on table\n',obj.height,obj.width, class(obj));
             fprintf('\tobj.ISGROUPED \t\t= %g\n',obj.ISGROUPED)
@@ -181,13 +177,20 @@ classdef tableAgent %< matlab.mixin.Copyable
         obj = keeprow(obj,strcol)
         obj = keepcol(obj,strrow)
         obj = blockExchange(obj,rowsA,colsA,rowsB,colsB);
-        obj = gen(obj,strcmd,fn1,fn2)
+        obj = blockCopy(obj,rowsA,colsA,rowsTarge,colsTarget)
         
+       % generate or update cols 
+        obj = gen(obj,strcmd,fn1,fn2)
         obj = gen_slice(obj,coly,ifthenGen) % support otherwise
         obj = gen_dummy (obj, tableVariable)
-        obj = gen_forEachCol(obj,strGen,newcolname) % x+1; x+1
+        
+        obj = gen_forEachCol(obj,colsx,genstr,colsnew)
 
         [obj,cmdstrFull] = runCmdGen(obj,cmdstr)
+        
+        % missing data
+        % fillmissing
+        
 
         % function definion for group
         obj = groupby(obj,colstr,coly,fn,colx)

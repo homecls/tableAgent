@@ -49,7 +49,7 @@ rowsSub = 1:numel(rows);
 colsIDSub = 1:nColsID;
 colsValSub = (nColsID+1):numel(cols);
 
-[~,vnameRowColVal] = colstr2coldouble(obj, vnameRowColVal);
+[vnameRowColVal] = strCommaSemicolon2cellstr(vnameRowColVal);
 BCell = stackCell(Acell,vnameRowColVal,rowsSub,colsIDSub,colsValSub);
 obj.table = cell2tableWithhead(BCell);
 vnames = obj.table.Properties.VariableNames;

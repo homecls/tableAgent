@@ -31,6 +31,9 @@ T2 = TRaw([1:20],[1:3,(4+7*3):3:(4+5*3+20)]);
 T = tableAgent(T2(:,1:end));
 % T.table;
 % disp(T)
+
+
+
 %%
 rows = [2:T.height];
 cols = [1,4:1:T.width];
@@ -42,6 +45,14 @@ TB.Year = str2doubleq(extractBefore(TB.Year,'Äê'));
 TB.Value = str2doubleq(TB.Value);
 TB.No = 1:TB.height;
 TC = TB.row([2:16]).gen_slice('HH',["Value>7000","2"; "Value<2000","11"]);
+
+
+%% test for gen_foreachcol
+T = TC; 
+atable = T.table;
+T.gen_forEachCol('No,Year','$x+4');
+TB = T.gen_forEachCol('No,Year','$x+4','$x_add');
+
 %% test gen_slice
 % TB = T.row().gen_slice('HH',["Value>7000","2"; "Value<7000","11"])
 

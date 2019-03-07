@@ -21,6 +21,10 @@
 %% VERSION: v1.0 2019/02/21
 
 clc; clear; close all; % fclose all;
+load patients.mat
+% vName = getwhos;
+T2 = table(Age,Diastolic,Gender,Height,LastName,Location,SelfAssessedHealthStatus,Smoker,Systolic,Weight);
+clear Age Diastolic Gender Height LastName Location SelfAssessedHealthStatus Smoker Systolic Weight
 P.prj = addpathprj('tableAgent');
 
 %% Part 1, Data 
@@ -38,8 +42,6 @@ Ttable.name = ["Joan","Merry","Tom"]';
 Ttable.grade = [99,67,35]';
 Ttable.G = [99,67,35]'+ 4;
 TB = tableAgent(Ttable);
-% TB{:,'地区,所属市'} = {'星星'}
-% TB(:,'地区,所属市')
 clear TB
 % return;
 

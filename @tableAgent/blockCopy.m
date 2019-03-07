@@ -1,5 +1,5 @@
 % OBJECTIVE: Calculate #####
-function obj = blockExchange(obj,rowsA,colsA,rowsB,colsB)
+function obj = blockCopy(obj,rowsA,colsA,rowsTarge,colsTarget)
 %  = fn(,)
 %
 %% INPUT
@@ -23,13 +23,13 @@ function obj = blockExchange(obj,rowsA,colsA,rowsB,colsB)
 
 %% Part 1, Data
 rowsA = rowstr2rowdouble(obj,rowsA);
-rowsB = rowstr2rowdouble(obj,rowsB);
+rowsTarge = rowstr2rowdouble(obj,rowsTarge);
 colsA = colstr2coldouble(obj,colsA);
-colsB = colstr2coldouble(obj,colsB);
+colsTarget = colstr2coldouble(obj,colsTarget);
 
-temp = obj.table(rowsB,colsB);
-obj.table(rowsB,colsB) = obj.table(rowsA,colsA);
-obj.table(rowsA,colsA) = temp;
+temp = obj.table(rowsTarge,colsTarget);
+obj.table(rowsTarge,colsTarget) = obj.table(rowsA,colsA);
+% obj.table(rowsA,colsA) = temp;
 
 %% Part 2, Calculation
 

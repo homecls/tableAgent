@@ -83,7 +83,7 @@ cmdstr = """C:\Program Files\WinRAR\WinRAR.exe"" a -r -ibck" ...
 cd('ZIPTEMP')
 for ifC =1:nClass
     ipClass = pclassUnique(ifC);
-    copyfile((ipClass),makeitchar("CLASSES\"+filepartsname(ipClass)) );
+    copyfile(makeitchar(ipClass),makeitchar("CLASSES\"+filepartsname(ipClass)) );
     
     % cmdstrP2 = strjoin(" """ + fclass(ipClass == pclass) + """ ");
     cmdstrP2 = " """ + ipClass + """ ";

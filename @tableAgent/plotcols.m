@@ -1,3 +1,6 @@
+
+
+
 % OBJECTIVE: plot cols of tableAgent
 function [obj,h_plot] = plotcols(obj, colsxy, varargin)
 % obj = fn(obj,cols)
