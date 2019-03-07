@@ -248,6 +248,12 @@ TN = TM.stackCell('loc,Value',(1:6),(1:2),([3,4,5]));
 % TM.stackCell(vnameRowandColval,rows,colsID,colsVal)
 ```
 
+#### pivot
+
+``` matlab
+[TB,TBUnstacked] = T.pivot({'Gender','Smoker'},'Diastolic',@numel);
+```
+
 ### 1.3.5 disp table
 
 ``` matlab

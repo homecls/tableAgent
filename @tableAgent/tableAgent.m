@@ -178,6 +178,7 @@ classdef tableAgent %< matlab.mixin.Copyable
         obj = keepcol(obj,strrow)
         obj = blockExchange(obj,rowsA,colsA,rowsB,colsB);
         obj = blockCopy(obj,rowsA,colsA,rowsTarge,colsTarget)
+        [obj, index] = sortrows(obj,col,varargin)
         
        % generate or update cols 
         obj = gen(obj,strcmd,fn1,fn2)
@@ -200,6 +201,7 @@ classdef tableAgent %< matlab.mixin.Copyable
         % Function declare: stack
         [obj,BCell] = stackCell(obj,vnameRowColVal,rows,colsID,colsVal)
         [obj,iu] = stack(obj,vars, varargin)
+        [obj,objUnstack] = pivot(obj,colAandB,colVal,fn)
         
         % Function declare: merge
          [obj,Tmerge] = merge(obj,TB,key,varargin);

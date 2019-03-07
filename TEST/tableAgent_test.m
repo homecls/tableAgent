@@ -211,6 +211,10 @@ TC = TB.stack('NE,MidAtl,SAtl');
 
 TD = TC.unstack('NE_MidAtl_SAtl','NE_MidAtl_SAtl_Indicator');
 
+
+[TB,TC] = T.pivot({'Gender','Smoker'},'Diastolic',@numel);
+
+
 % stackCell
 TM = TD.gen_forEachCol('Year,NE,MidAtl,SAtl','num2str($x)');
 TM{1,1:5} = TM.table.Properties.VariableNames;

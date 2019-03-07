@@ -15,7 +15,12 @@ switch S(1).type
                 obj = objRaw;
             case methods(obj)
                 if areParensNext(S)
-                    objB = feval(S(1).subs, obj, S(2).subs{:});
+                    if ismember(S(1).subs,'pivot')
+                        [objB,varargout{2}] = feval(S(1).subs, obj, S(2).subs{:});
+                    else
+                        objB = feval(S(1).subs, obj, S(2).subs{:});
+                    end
+                    
                     S = shiftS(S,1);
                     if length(shiftS(S,1))<1 %% reset rowselected for last operation
                         objB.rowselected = true(height(obj.table),1); %%
