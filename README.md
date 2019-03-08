@@ -95,16 +95,6 @@ data1 = T{[1,3,6],'Age'}; % TODO: data1 = T{'Age<20','Age'};
 data2 = TB{1,3};
 ```
 
-### 1.3.4 generate/update columns
-
-#### generate new col or variable, by passing inline-function para
-
-```matlab
-% Test of passing inline-function para
-fnew = @(x)(x+3);
-TB = T.row().gen('Age=fnew(pi)',fnew,'fnew');
-```
-
 #### dropcols keepcols, and droprows keeprows
 
 ```matlab
@@ -123,6 +113,7 @@ TB = T.row([1,10]).droprow('Age>50'); % drop
 TB = T.keeprow([1,3,4]);
 ```
 
+### 1.3.4 generate/update columns
 
 #### generate new col of constant
 

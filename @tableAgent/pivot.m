@@ -2,7 +2,9 @@ function [obj,objUnstack] = pivot(obj,colAandB,colVal,fn)
 % TB = T.pivot({'Name', 'Letter'}, 'ColValue', @sum)
 % https://www.mathworks.com/matlabcentral/fileexchange/59021-mjeppesen-matlab-pivot-table
 [~,colAandB] = colstr2coldouble(obj,colAandB);
+% tic
 obj.table = pivot_table(obj.table,colAandB,colVal,fn);
+% toc
 objUnstack = obj;
 vnames = obj.table.Properties.VariableNames;
 if islogical(obj.table.(vnames{2}))
