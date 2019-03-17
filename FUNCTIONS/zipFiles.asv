@@ -1,5 +1,5 @@
 % OBJECTIVE: Calculate #####
-function [pfZip,pfList,pfMain,pfClass] = zipFiles(fall,fzip)
+function [fzip,fmAndemf,fList] = zipFiles(fall,fzip)
 % fzip = fn(fall,fzip)
 %
 %% INPUT
@@ -23,7 +23,6 @@ function [pfZip,pfList,pfMain,pfClass] = zipFiles(fall,fzip)
 
 %% Part 1, Data
 fall = makeitstring(fall);
-pfList = fall;
 
 % find mainfile and emf
 fmain = string(strrep(fzip,'.zip','.m'));
@@ -95,16 +94,5 @@ log = dos(cmdstr);
 
 %% delete the temp folder
 cd(pOrg);
-if exist('ZIPTEMP','dir')
-try
-    rmdir('ZIPTEMP','s');
-catch
-    try
-        rmdir('ZIPTEMP','s');
-    catch
-%         rmdir('ZIPTEMP');
-    end
-    
-end
-end
+rmdir('ZIPTEMP','s');
 end

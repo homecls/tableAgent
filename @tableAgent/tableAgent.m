@@ -223,6 +223,8 @@ classdef tableAgent %< matlab.mixin.Copyable
         varargout = subsref(obj,S)
         obj = subsasgn(obj, S, V)
         [b,varargout] = subsrefDot(t,s)
+        S = shiftS(S,n)
+        %tf = areParensNext(S)
         
         %% Appendixs (FIXME:)
         % function copy key properties

@@ -3,6 +3,7 @@
 
 clc; clear; close all; %fclose all
 P = addpathprj('tableAgent');
-cdmfile(mfilename)
-[fzip,fmAndemf,fAll] = exportToZipWithFundep...
-('tableAgent_test.m');
+cdmfile(mfilename);
+tic
+[pfZip,pfList,pfMain,pfClass] = packageMfile('tableAgent_test.m');
+toc
