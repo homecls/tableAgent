@@ -1,0 +1,20 @@
+
+
+# Backup
+data/backup
+data/backup/
+data/gaode
+
+scripts/
+
+# MacOS
+.DS_Store
+
+
+# Jetbrain
+.idea/
+adcode.iml
+
+@tableAgent
+@tableAgent/test
+TEST/tableAgent_test.m
