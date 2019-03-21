@@ -59,15 +59,13 @@ fxls = 'DataTemp.xlsb';
 % fCsv2 = 'DataTemp_Popu.csv';
 % writetable(TB.table,fCsv2,'Delimiter' ,'\t','QuoteStrings',true,'Encoding','UTF-8')
 TB = readtableAgent(fxls);
-TB.table.Properties.VariableNames(1) = {'City'};
 % save DataTempTB.mat TB
-TC = TB(1:3,1:4).gen('ColHappy=1');
+TC = TB().gen('ColNew=1');
 TB.TcolLabel2colName
-TD  = TB.mergeWithLabel(TC,'City');
-TE  = TB.merge(TC,'City');
+TC  = TB.mergeTables(T
 %% test of label setting
 TB.TcolLabel2colName
-% return
+return
 %% assign 
 TB = T;
 TB{1,8:9} = [1,125];
@@ -145,7 +143,7 @@ TB = T.gen('No2=1:obj.height'); % nature number col
 TB = T.gen("G2=([1:100])'");
 TC = TB.keepcol([1:5,11,6:10]);
 TC = TB.keepcol(["G2", "Age"]);
-TC = TB.keepcol("G2,Age");
+TC = TB.keepcol("G,Age");
 TB.table = movevars( TB.table , 'G2' ,'Before', 'Age' );
 % TB = TB.movevars('G2' ,'Before', 'Age' );% TODO: 
 

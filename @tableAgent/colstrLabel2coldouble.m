@@ -14,7 +14,7 @@ function [coldouble, colcellstr]= colstrLabel2coldouble(obj, strcol, rowno)
     else
        varnames = obj.Properties.VariableNames;
     end
-    labelnames = obj.label.(1);
+    %labelnames = obj.label.(1);
     
     opt = class(strcol);
     switch opt

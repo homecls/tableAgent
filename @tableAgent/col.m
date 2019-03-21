@@ -33,3 +33,4 @@ obj.colselected = colstr2coldouble(obj, strcol);
 
 end
 
+

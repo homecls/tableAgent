@@ -25,8 +25,15 @@ function obj = keepcol(obj,colstr)
 if nargin==1
     coldouble = obj.colselected;
 else
-    obj = obj.col(colstr);
-    coldouble = obj.colselected;
+    [coldouble, colcellstr] = colRaw2colDouble(obj, colstr);
+%     obj = obj.col(colstr);
+%     coldouble = obj.colselected;
+end
+idcolnotfind = coldouble == 0;
+if any(idcolnotfind)
+    cprintf('error','some colname are not find\n')
+    disp(find(idcolnotfind))
+    error('some colname are not find\n')
 end
 obj.table = obj.table(:,coldouble);
 obj.colselected = [];

@@ -67,14 +67,28 @@ switch S(1).type
         varargout{1} = obj;
     case '()'
         S = colstr2coldoubleRobust(obj,S); % function defined this function
+        S = rowRaw2rowdoubleTableAgent(obj,S);
+        %         [Tres,s] = builtin('subsref', obj.table, S);
+%         S = s;
         obj.table = obj.table(S(1).subs{:});
-        varargout{1} = obj.table;
-        % S = shiftS(S,1);
+%         obj.table = Tres;
+        varargout{1} = obj;
+        % = shiftS(S,1);
     case '{}'
         % Overload the subsref method.
         %         subsrefcheck(obj.table, S);
         S = colstr2coldoubleRobust(obj,S);
+        S = rowRaw2rowdoubleTableAgent(obj,S);
+        try
         [varargout{1:nargout}] = [builtin('subsref', obj.table, S)];
+        catch ME
+            if strcmp(ME.identifier,'MATLAB:table:ExtractDataIncompatibleTypeError')
+            varargout{1:nargout} = table2cell(obj.table(S(1).subs{:}));
+            else 
+                disp(ME)
+                error('');
+            end
+        end
         S = shiftS(S,1);
 %         obj.table{makeitdouble(S(1).subs),makeitdouble(S(2).subs)};
 %         obj.table{S(2).subs{:}};
@@ -130,54 +144,4 @@ if numel(S(1).subs)==2
 end
 
 end
-% end
 
-%
-% if strcmp(s(1).type,'()')
-%     obj = struct(obj);
-%     obj = obj(s(1).subs{:});
-%     obj = fdspec(obj);
-%     s(1) = [];
-% end
-%
-% if isempty(s)
-%     a = obj;
-%     return
-% end
-%
-% switch s(1).type
-%     case {'()','{}'}
-%         error(message('signal:fdspec:subsref:GUIErr'))
-%     case '.'
-%
-%         if isfield(s(1).subs,obj)
-%             % 是否为panelTable的子域，
-%             a = obj.(s(1).subs);
-%
-%         elseif isfield(s(1).subs,obj.table) || ismember(s(1).subs,obj.table.Properties.VariableNames)
-%           % 是否为Table的子域， 或者是否为table的列变量
-%             a = obj.table.(s(1).subs);
-%         else
-%             error(message('signal:fdspec:subsref:GUIErr'))
-%         end
-%
-% end
-%
-% if length(s)>1
-%     % subsref into ans
-%     a = mysubsref(a,s(2:end));
-% end
-%
-%
-% function a = mysubsref(a,s)
-%
-% for i=1:length(s)
-%     switch s(i).type
-%     case '()'
-%         a = a(s(i).subs{:});
-%     case '{}'
-%         a = a{s(i).subs{:}};
-%     case '.'
-%         a = getfield(a,s(i).subs);
-%     end
-% end

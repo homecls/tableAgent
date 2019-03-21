@@ -66,7 +66,7 @@ for ifile=1:nNotClassNotMain
     copyfile(pfNotClassNotMain{ifile},'ZIPTEMP\FunctionsExternal');
 end
 copyfile(pfMain,'ZIPTEMP');
-copyfile(pfEmf,'ZIPTEMP');
+% copyfile(pfEmf,'ZIPTEMP');
 
 pOrg = pwd;
 
@@ -74,8 +74,8 @@ pOrg = pwd;
 cmdstr = """C:\Program Files\WinRAR\WinRAR.exe"" a -r -ibck" ...
     + " """ + pfZip + """ "...
     + " """ + "FunctionsExternal" + """ "...
-    + " """ + fmain + """ "...
-    + " """ + fEmf + """ "; % -AP means append % -r means reserve path
+    + " """ + fmain + """ "; % -AP means append % -r means reserve path...
+%     + " """ + fEmf + """ "; % -AP means append % -r means reserve path
 cd('ZIPTEMP')
 log = dos(cmdstr);
 
@@ -91,7 +91,10 @@ cd(pOrg+"\ZIPTEMP");
 cmdstr = """C:\Program Files\WinRAR\WinRAR.exe"" a -r -ibck" ...
     + " """ + pfZip + """ "...
     + " """ + "CLASSES" + """ ";
-log = dos(cmdstr);
+
+if exist('./CLASSES','dir')
+    log = dos(cmdstr);
+end
 
 %% delete the temp folder
 cd(pOrg);

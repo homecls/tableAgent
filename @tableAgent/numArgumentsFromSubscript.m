@@ -23,11 +23,13 @@ else % multiple subscripting levels
     recurseAtLevel = 2;
     % Perform one level of indexing, then forward result to builtin numArgumentsFromSubscript
     if strcmp(s(1).type,'{}')
-        x = t.subsrefBraces(s(1));
+        % x = t.subsrefBraces(s(1));
+        sz =1;
+        return;
     elseif strcmp(s(1).type,'.')
         if ismember(s(1).subs,...
                 {'gen','row','col','colbyLabel','genbygroup'...
-                ,'keeprow','keepcol','droprow','dropcol','groupby'}) % added by linrenwen@gmail.com
+                ,'keeprow','keepcol','droprow','dropcol','groupby','headwithLabel'}) % added by linrenwen@gmail.com
             % sz = size(t)+[0,1];
             sz = 1;
             return;
@@ -87,7 +89,10 @@ else % multiple subscripting levels
             end
         end
     else % strcmp(s(1).type,'()'), e.g. t(...,...).Var
-        x = t.subsrefParens(s(1));
+        % x = t.subsrefParens(t,s(1));
+        % obj.table = x;
+        sz =1;
+        return;
     end
     s = s(recurseAtLevel:end);
     sz = matlab.internal.tabular.private.numArgumentsFromSubscriptRecurser(x,s,context);
