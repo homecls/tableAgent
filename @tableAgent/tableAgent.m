@@ -93,11 +93,14 @@ classdef tableAgent %< matlab.mixin.Copyable
         end
         
         function val = get.label(obj)
-            if isempty(obj.label)
-               val = obj.table.Properties.VariableNames; % FIXME: cellstr or table?
-            else
-                val = obj.label;
-            end
+            TnameMap = obj.TcolLabel2colName;
+            TnameMap.Row = TnameMap.Name;
+            val = TnameMap{obj.table.Properties.VariableNames,'Label'};
+%             if isempty(obj.label)
+%                val = obj.table.Properties.VariableNames; % FIXME: cellstr or table?
+%             else
+%                 val = obj.label;
+%             end
         end
 
         function val = get.TcolLabel2colName(obj)

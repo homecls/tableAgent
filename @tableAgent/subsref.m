@@ -66,7 +66,8 @@ switch S(1).type
         end
         varargout{1} = obj;
     case '()'
-        S = colstr2coldoubleRobust(obj,S); % function defined this function
+        % S = colstr2coldoubleRobust(obj,S); % function defined this function
+        S(1).subs{2} =  colRaw2colDouble(obj,S(1).subs{2});
         S = rowRaw2rowdoubleTableAgent(obj,S);
         %         [Tres,s] = builtin('subsref', obj.table, S);
 %         S = s;
@@ -77,7 +78,8 @@ switch S(1).type
     case '{}'
         % Overload the subsref method.
         %         subsrefcheck(obj.table, S);
-        S = colstr2coldoubleRobust(obj,S);
+%         S = colstr2coldoubleRobust(obj,S);
+        S(1).subs{2} =  colRaw2colDouble(obj,S(1).subs{2});
         S = rowRaw2rowdoubleTableAgent(obj,S);
         try
         [varargout{1:nargout}] = [builtin('subsref', obj.table, S)];

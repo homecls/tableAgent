@@ -6,28 +6,54 @@ function B = subsasgn(obj, S, V)
 % This file is part of panelTable.
 %
 
-if isempty(obj.label)
-    setlabel = {'label canot find '};
-else
-    %   if iscell()
-    if iscell(obj.label)
-        labelnames = obj.label;
-    else
-        labelnames = obj.label.(1);
-    end
-    setlabel =  setdiff(labelnames,fieldnames(obj.table));      
-end
+% if isempty(obj.label)
+%     setlabel = {'label canot find '};
+% else
+%     %   if iscell()
+%     if iscell(obj.label)
+%         labelnames = obj.label;
+%     else
+%         labelnames = obj.label.(1);
+%     end
+%     setlabel =  setdiff(labelnames,fieldnames(obj.table));      
+% end
 
 B = obj;
+
+% case TAgent.table.Properties.VariableNames({'G'}) = {'G2'};
 if length(S) > 1
     for i=1:(length(S)-1)
         B = subsref(B, S(i));
+        if istable(B) && strcmp(S(i).subs, 'table')
+            B = subsasgn(B, S(i+1:end), V(:));
+            if strcmp(S(end).type,'()') && strcmp(S(end-1).subs, 'VariableNames')
+               % TAgent.table.Properties.VariableNames(S(end).subs) = {'G2'};
+               TcolnameLabel = obj.TcolLabel2colName;
+               TcolnameLabel.Row = TcolnameLabel.Name;
+               TcolnameLabel(S(end).subs{1},'Name') = V(:);
+               obj.table = B;
+               B = obj;
+               B.TcolLabel2colName = TcolnameLabel;
+            elseif strcmp(S(end).subs, 'VariableNames')
+                % case % case TAgent.table.Properties.VariableNames = {'A','B','C'};
+               TcolnameLabel = obj.TcolLabel2colName;
+               TcolnameLabel.Row = TcolnameLabel.Name;
+               TcolnameLabel(:,'Name') = V(:);
+               obj.table = B;
+               B = obj;
+               B.TcolLabel2colName = TcolnameLabel;
+            else
+            end
+            
+           return;
+        end
     end
-    B = subsasgn(B, S(end), V(:));
+    
     B = subsasgn(obj, S(1:(end-1)), B);
     return
 end
 
+% T(1,:) = {'a','b'}
 switch S.type
     case '()'
         % index = S.subs{:};
@@ -65,22 +91,22 @@ switch S.type
                 
             case obj.table.Properties.VariableNames
                 B.table.(S.subs) = V;
-            case setlabel
-                [~,idlabel] = ismember(S(1).subs,labelnames);
-                vnames = obj.table.Properties.VariableNames;
-                vname = vnames{idlabel};
-                
-                if ischar(V)
-                   B.table.(vname) = repmat({V},obj.height,1);
-                elseif isstring(V) && numel(V) == 1
-                    B.table.(vname) = repmat(V, obj.height, 1);
-                elseif iscellstr(V) && numel(V) == 1
-                    B.table.(vname) = repmat(V, obj.height, 1);
-                elseif isnumeric(V) && numel(V) == 1
-                    B.table.(vname) = repmat(V,obj.height,1);
-                else
-                    B.table.(vname)= V(:) ;
-                end
+%             case setlabel
+%                 [~,idlabel] = ismember(S(1).subs,labelnames);
+%                 vnames = obj.table.Properties.VariableNames;
+%                 vname = vnames{idlabel};
+%                 
+%                 if ischar(V)
+%                    B.table.(vname) = repmat({V},obj.height,1);
+%                 elseif isstring(V) && numel(V) == 1
+%                     B.table.(vname) = repmat(V, obj.height, 1);
+%                 elseif iscellstr(V) && numel(V) == 1
+%                     B.table.(vname) = repmat(V, obj.height, 1);
+%                 elseif isnumeric(V) && numel(V) == 1
+%                     B.table.(vname) = repmat(V,obj.height,1);
+%                 else
+%                     B.table.(vname)= V(:) ;
+%                 end
             otherwise
                 B.table.(S.subs) = V(:);    
                 % error(['@page.subsasgn: field ' S.subs 'does not exist']);
@@ -95,9 +121,10 @@ function S = colstr2coldoubleRobust(obj,S)
 if numel(S(1).subs)==2
     % case TB{:,'地区,所属市'}
     colsdouble = colstr2coldouble(obj,S(1).subs{2});
+    
     if colsdouble == 0
         colsdouble = colstrLabel2coldouble(obj,S(1).subs{2});
-        
+
         if colsdouble == 0
             colsdouble = S(1).subs{2};
         end

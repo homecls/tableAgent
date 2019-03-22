@@ -45,26 +45,20 @@ TB.sex = ["male","female","male","female"]';
 TB.grade = [99,67,66,35]';
 TB.G = [99,67,88,55]'+ 4;
 
-%% Construction method 2
+% Construction method 2
 TB = table;
 TB.name = ["Joan","Merry","Tom"]';
 TB.grade = [99,67,35]';
 TB.G = [99,67,35]'+ 4;
 TB = tableAgent(TB);
+TB.table.Properties.VariableNames({'G'}) = {'G2'};
+TB.table.Properties.VariableNames = {'A','B','C'};
 
 
-%% ### Construction method 3
+% Construction method 3
 fxls = 'DataTemp.xlsb';
-% TB = readtableAgentRaw(fxls);
-% fCsv2 = 'DataTemp_Popu.csv';
-% writetable(TB.table,fCsv2,'Delimiter' ,'\t','QuoteStrings',true,'Encoding','UTF-8')
 TB = readtableAgent(fxls);
-TB.table.Properties.VariableNames(1) = {'City'};
-% save DataTempTB.mat TB
-TC = TB(1:3,1:4).gen('ColHappy=1');
-TB.TcolLabel2colName
-TD  = TB.mergeWithLabel(TC,'City');
-TE  = TB.merge(TC,'City');
+
 %% test of label setting
 TB.TcolLabel2colName
 % return
@@ -108,8 +102,9 @@ data4 = T{'Age>48','3:4'}
 fnew = @(x)(x+3);
 TB = T.row().gen('Age=fnew(pi)',fnew,'fnew');
 % alternative method: define your function in mfile
+TB = T.row().gen('Age=mysin(pi)');
 
-% % test of dropcols keepcols, and droprows keeprows
+% test of dropcols keepcols, and droprows keeprows
 TB = T.keepcol('LastName,Age');
 TB = T.keepcol({'LastName','Age'});
 TB = T.keepcol(["LastName","Age"]);
@@ -119,14 +114,12 @@ TB = T.col([1,3]).keepcol();
 TB = T.dropcol(3);
 TB = T.dropcol('Age');
 
-
 TB = T.droprow(3);
 TB = T.row(3).droprow();
 TB = T.row([1,10]).droprow('Age>50'); % drop 
 TB = T.keeprow([1,3:13]);
-%
 TB = T.keepcol(5).keeprow([1,3:13]);
-% ```
+
 
 
 %% test by gen
@@ -137,17 +130,19 @@ TB = T.gen('G3=NaT');
 TB = T.gen('G4=NaN');
 TB = T.gen('G6=6').gen('G7=7');
 TB = T.gen('G4=NaN');
+
+% % Syntax for Table class: 
 % T.table.G4 = NaN(100,1);
-% T = T.dropcol("G4")
 % T.table(:,{'G4'}) = [];
 % T.table.G4 = [];
+
 TB = T.gen('No2=1:obj.height'); % nature number col
 TB = T.gen("G2=([1:100])'");
 TC = TB.keepcol([1:5,11,6:10]);
 TC = TB.keepcol(["G2", "Age"]);
 TC = TB.keepcol("G2,Age");
 TB.table = movevars( TB.table , 'G2' ,'Before', 'Age' );
-% TB = TB.movevars('G2' ,'Before', 'Age' );% TODO: 
+% TODO: TB = TB.movevars('G2' ,'Before', 'Age' );
 
 data = {'Miller5555','Female',33,64,142,'VA Hospital',1,88,130,'Good'};
 vName = T.table.Properties.VariableNames; %%##
@@ -172,7 +167,7 @@ TB = T.runCmdGen('Age2 = Age + 100');
 fnew = @(x)(x+3);
 TB = T.row().gen('Age=fnew(pi)',fnew,'fnew');
 
-% ### Test of passing variable-para
+% Test of passing variable-para
 para.x = [1,1]';
 para.y = [10,10]';
 TB = T.row([1,2]).gen('AgeB=Age + para.x',para);
@@ -182,18 +177,19 @@ TB = T.row([1,2]).gen('AgeB=Age + para.x',para);
 % generate new col by group operation
 % method 1
 TB = T(1:30,1:10).groupby({'Gender','Smoker'}).genbygroup('AgeCount = numel(Age)');
-% findgroups and splitapply
+% Syntax for Table class: findgroups and splitapply
 
 TB = T.row('Systolic>=120').groupby('Gender')...
     .genbygroup('Systolic_TF = Systolic - mean(Systolic)')...
     .genbygroup('Diastolic_TF = mean(Diastolic)');
-% % method 2
-TB = T.groupby('Gender','AgeMean',@(x)mean(x),'Age');% coly = f(colx)
-% ```
 
-% ### generate new col for each cols
+% method 2
+TB = T.groupby('Gender','AgeMean',@(x)mean(x),'Age');% coly = f(colx)
+
+% generate new col for each cols
 TB = T.row([1:20]).gen_forEachCol('Age,Height','$x+4','$x_adj');
  
+% generate new col by discrete assign
 TB = T.row().gen_slice('ColNew', ...
     ["ismember(LastName,{'Smith','Jones'})","'NAME'"; ...
     "ismember(Gender,{'Female'})","'FEMALE'"
@@ -214,7 +210,8 @@ colsTarget = colsA;
 TB = T.blockExchange(rowsA,colsA,rowsTarget,colsTarget);
 TB = T.blockCopy(rowsA,colsA,rowsTarget,colsTarget);
 
-%% merge
+%% merge and query
+% merge
 TB = T([1,2],:).gen('Age3 = Age+100').keepcol([1,11]);
 TM = T.merge(TB,'LastName');
 
@@ -247,10 +244,8 @@ TD = TC.unstack('NE_MidAtl_SAtl','NE_MidAtl_SAtl_Indicator');
 TM = TD.gen_forEachCol('Year,NE,MidAtl,SAtl','num2str($x)');
 TM{1,1:5} = TM.table.Properties.VariableNames;
 
-TN = TM.stackCell('loc,Value',(1:6),(1:2),([3,4,5]));
-% BCell = stackCell(Acell, {'colname' 'varname'},rows,colsID,colsVal)
-
-
+TN = TM.stackCell('loc,Value',(1:6),[1:2],[3,4,5]);
+% syntax: BCell = stackCell(Acell, {'colname' 'varname'},rows,colsID,colsVal)
 
 %% disp of tableAgent
 % test of disp
@@ -270,6 +265,23 @@ hf = figure;
 setfontdefault(11)
 T.gen('No=1:obj.height').plotcols('No,Age,Weight');
 
+%% tableAgent with UTF8 label 
+fxls = 'DataTemp.xlsb';
+TB = readtableAgent(fxls);
+TB.table.Properties.VariableNames(1) = {'City'};
+TB.keepcol('1:所属市')
+TB.keepcol('City:所属市')  % use TB.headwithLabel to find the label
+TB.keepcol(["1", "所属省份"])
+TB.keepcol({'1','所属省份'})
+TB(1:2,'地区:所属市')
+TB{1:2,'地区:5'}
+
+TB.headwithLabel %
+TB.label
+TB.TcolLabel2colName
+TC = TB(1:3,1:4).gen('ColHappy=1');
+TM  = TB.mergeWithLabel(TC,'City');
+
 
 %% a long example of chain method operation
 TB = T.row('Age==40|Age<35').gen('Age = Age+1').gen('G = Age*2')...
@@ -277,4 +289,8 @@ TB = T.row('Age==40|Age<35').gen('Age = Age+1').gen('G = Age*2')...
     .row([1,3]).gen('G=3')...
     .row().gen('G=pi');
 
+
+
 return;
+
+%% Appendix of functions

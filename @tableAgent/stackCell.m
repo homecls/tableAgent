@@ -53,12 +53,13 @@ colsValSub = (nColsID+1):numel(cols);
 BCell = stackCell(Acell,vnameRowColVal,rowsSub,colsIDSub,colsValSub);
 obj.table = cell2tableWithhead(BCell);
 vnames = obj.table.Properties.VariableNames;
-vnames = vnames(:);
-label = BCell(1,:);
-label = label(:);
-obj.label = table(label);
-obj.label.Row = vnames; % obj.label.(1){'Year'}
-obj.table = setOriginalVarnameofTableVar(obj.table,obj.table.Properties.VariableNames, obj.label.(1));
+Name = vnames(:);
+labelRaw = BCell(1,:);
+Label = labelRaw(:);
+obj.TcolLabel2colName = table(Label,Name);
+% obj.label = table(label);
+% obj.label.Row = vnames; % obj.label.(1){'Year'}
+obj.table = setOriginalVarnameofTableVar(obj.table, Name, Label);
 
 
 %% Part 2, Calculation

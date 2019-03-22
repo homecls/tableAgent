@@ -42,7 +42,9 @@ function obj = gen_forEachCol(obj,colsx,genstr,colsnew)
 % eval(strcat(fname,'=@fn;'));
 % fname = eval('@fn');
 
-[colsxDouble, colsxCellstr]= colstr2coldouble(obj,colsx);
+
+% [colsxDouble, colsxCellstr]= colstr2coldouble(obj,colsx);
+[colsxDouble, colsxCellstr]= colRaw2colDouble(obj,colsx);
 nCol = numel(colsxCellstr);
 for iCol = 1:nCol
     iColnamex = colsxCellstr{iCol};
