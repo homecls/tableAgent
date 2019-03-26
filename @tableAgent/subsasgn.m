@@ -6,17 +6,6 @@ function B = subsasgn(obj, S, V)
 % This file is part of panelTable.
 %
 
-% if isempty(obj.label)
-%     setlabel = {'label canot find '};
-% else
-%     %   if iscell()
-%     if iscell(obj.label)
-%         labelnames = obj.label;
-%     else
-%         labelnames = obj.label.(1);
-%     end
-%     setlabel =  setdiff(labelnames,fieldnames(obj.table));      
-% end
 
 B = obj;
 

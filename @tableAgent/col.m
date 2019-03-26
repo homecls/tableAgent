@@ -29,7 +29,9 @@ if nargin == 1
 return;
 end
 
-obj.colselected = colstr2coldouble(obj, strcol);
+%
+obj.colselected = colRaw2colDouble(obj, strcol);
+% obj.colselected = colstr2coldouble(obj, strcol);
 
 end
 

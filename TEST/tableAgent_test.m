@@ -45,6 +45,7 @@ TB.sex = ["male","female","male","female"]';
 TB.grade = [99,67,66,35]';
 TB.G = [99,67,88,55]'+ 4;
 
+
 % Construction method 2
 TB = table;
 TB.name = ["Joan","Merry","Tom"]';
@@ -58,6 +59,8 @@ TB.table.Properties.VariableNames = {'A','B','C'};
 % Construction method 3
 fxls = 'DataTemp.xlsb';
 TB = readtableAgent(fxls);
+
+%%
 
 %% test of label setting
 TB.TcolLabel2colName
@@ -273,6 +276,8 @@ TB.keepcol('1:所属市')
 TB.keepcol('City:所属市')  % use TB.headwithLabel to find the label
 TB.keepcol(["1", "所属省份"])
 TB.keepcol({'1','所属省份'})
+TB.dropcol('地区:所属省份')
+TC= TB.col('区域')
 TB(1:2,'地区:所属市')
 TB{1:2,'地区:5'}
 
