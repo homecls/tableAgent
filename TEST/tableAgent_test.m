@@ -277,7 +277,7 @@ TB.keepcol('City:所属市')  % use TB.headwithLabel to find the label
 TB.keepcol(["1", "所属省份"])
 TB.keepcol({'1','所属省份'})
 TB.dropcol('地区:所属省份')
-TC= TB.col('区域')
+% TC= TB.col('区域')
 TB(1:2,'地区:所属市')
 TB{1:2,'地区:5'}
 
